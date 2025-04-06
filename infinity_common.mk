@@ -5,7 +5,7 @@
 #
 
 # Overlays
-DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay-lineage
+DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay-infinity
 
 # AiAi Config
 PRODUCT_COPY_FILES += \
@@ -29,6 +29,10 @@ PRODUCT_PRODUCT_PROPERTIES += ro.opa.eligible_device=true
 # Lineage Health
 include hardware/google/pixel/lineage_health/device.mk
 
+$(call soong_config_set,lineage_health,charging_control_supports_deadline,true)
+$(call soong_config_set,lineage_health,charging_control_supports_limit,true)
+$(call soong_config_set,lineage_health,charging_control_supports_toggle,false)
+
 # Linker config
 PRODUCT_VENDOR_LINKER_CONFIG_FRAGMENTS += \
     device/google/zuma/linker.config.json
@@ -36,6 +40,12 @@ PRODUCT_VENDOR_LINKER_CONFIG_FRAGMENTS += \
 # Parts
 PRODUCT_PACKAGES += \
     GoogleParts
+
+# PixelParts
+include device/google/zuma/packages/apps/PixelParts/device.mk
+
+# SCUDO    
+TARGET_USES_SCUDO := true
 
 # Tethering
 PRODUCT_PACKAGES += \
