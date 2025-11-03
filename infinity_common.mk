@@ -41,9 +41,6 @@ PRODUCT_VENDOR_LINKER_CONFIG_FRAGMENTS += \
 PRODUCT_PACKAGES += \
     GoogleParts
 
-# PixelParts <Evolution-X>
-include device/google/zuma/packages/apps/PixelParts/device.mk
-
 # SCUDO    
 TARGET_USES_SCUDO := true
 
