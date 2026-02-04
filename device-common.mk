@@ -5,6 +5,9 @@
 
 include device/google/zuma/device.mk
 
+# Pixel Telephony
+include vendor/telephony.mk
+
 # Telephony
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.carrierlock.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.telephony.carrierlock.xml

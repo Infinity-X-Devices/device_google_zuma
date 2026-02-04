@@ -5,18 +5,16 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Build Duplicates
+BUILD_BROKEN_DUP_RULES := true
+
 include build/make/target/board/BoardConfigMainlineCommon.mk
 include build/make/target/board/BoardConfigPixelCommon.mk
 
-# Include settings for 16k developer option, if enabled
-ifneq ($(wildcard $(TARGET_KERNEL_DIR)/16kb/),)
-include device/google/zuma/BoardConfig-16k-common.mk
-endif
-
 TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-2a
+TARGET_ARCH_VARIANT := armv9-a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_VARIANT := cortex-a55
+TARGET_CPU_VARIANT := cortex-a510
 
 BOARD_KERNEL_CMDLINE += earlycon=exynos4210,0x10870000 console=ttySAC0,115200 androidboot.console=ttySAC0 printk.devkmsg=on
 BOARD_KERNEL_CMDLINE += cma_sysfs.experimental=Y
@@ -123,6 +121,25 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 11796480000
 PRODUCT_FS_COMPRESSION := 1
 BOARD_FLASH_BLOCK_SIZE := 4096
 
+ifneq ($(WITH_GMS),true)
+# system.img
+BOARD_SYSTEMIMAGE_EXTFS_INODE_COUNT := -1
+BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 52428800
+TARGET_COPY_OUT_SYSTEM := system
+
+# product.img
+BOARD_PRODUCTIMAGE_EXTFS_INODE_COUNT := -1
+BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1988938957
+TARGET_COPY_OUT_PRODUCT := product
+
+# system_ext.img
+BOARD_SYSTEM_EXTIMAGE_EXTFS_INODE_COUNT := -1
+BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEM_EXTIMAGE_PARTITION_RESERVED_SIZE := 52428800
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+else
 # system.img
 BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
 
@@ -133,6 +150,7 @@ TARGET_COPY_OUT_PRODUCT := product
 # system_ext.img
 BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+endif
 
 # vendor.img
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -158,9 +176,6 @@ BOARD_GOOGLE_DYNAMIC_PARTITIONS_PARTITION_LIST := \
 
 # Set error limit to BOARD_SUPER_PARTITON_SIZE - 500MB
 BOARD_SUPER_PARTITION_ERROR_LIMIT := 8006926336
-
-# Reserve space for gapps install
--include vendor/lineage/config/BoardConfigReservedSize.mk
 
 # Build a separate system_dlkm partition
 BOARD_USES_SYSTEM_DLKMIMAGE := true
